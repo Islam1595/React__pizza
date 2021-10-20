@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
 import LoadingBlock from './LoadingBlock';
 
 function PizzaBlock({ name, imageUrl, price, types, sizes }) {
-  const avaiLableTypes = ['тонкое', 'традиционное'];
-  const avaiLableSizes = [26, 30, 40];
+  const availableTypes = ['тонкое', 'традиционное'];
+  const availableSizes = [26, 30, 40];
 
   const [activeType, setActiveType] = React.useState(types[0]);
+  // TODO: Проверить почему не выбирается по умолчанию первый размер при первом рендере
   const [activeSize, setActiveSize] = React.useState(sizes[0]);
 
   const onSelectType = (index) => {
@@ -24,7 +26,7 @@ function PizzaBlock({ name, imageUrl, price, types, sizes }) {
       <h4 className="pizza-block__title">{name}</h4>
       <div className="pizza-block__selector">
         <ul>
-          {avaiLableTypes.map((type, index) => (
+          {availableTypes.map((type, index) => (
             <li
               key={type}
               onClick={() => onSelectType(index)}
@@ -37,7 +39,7 @@ function PizzaBlock({ name, imageUrl, price, types, sizes }) {
           ))}
         </ul>
         <ul>
-          {avaiLableSizes.map((size, index) => (
+          {availableSizes.map((size, index) => (
             <li
               key={size}
               onClick={() => onSelectSize(index)}
@@ -45,7 +47,7 @@ function PizzaBlock({ name, imageUrl, price, types, sizes }) {
                 active: activeSize === index,
                 disabled: !sizes.includes(size),
               })}>
-              {size}
+              {size} см.
             </li>
           ))}
         </ul>
@@ -73,11 +75,11 @@ function PizzaBlock({ name, imageUrl, price, types, sizes }) {
 }
 
 PizzaBlock.propTypes = {
-  name: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  types: PropTypes.arrayOf(PropTypes.number).isRequired,
-  sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+  name: PropTypes.string,
+  imageUrl: PropTypes.string,
+  price: PropTypes.number,
+  types: PropTypes.arrayOf(PropTypes.number),
+  sizes: PropTypes.arrayOf(PropTypes.number),
 };
 
 PizzaBlock.defaultProps = {

@@ -2,41 +2,46 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Categories, SortPopup, PizzaBlock, PizzaLoadingBlock } from '../components';
-import { setCategory } from '../redux/actions/filters';
-import { fetchPizzas, setPizzas } from '../redux/actions/pizzas';
 
-const categoryNames = ['Мясные', 'Вегетаранская', 'Гриль', 'Остры', 'Закрытые'];
+import { setCategory, setSortBy } from '../redux/actions/filters';
+import { fetchPizzas } from '../redux/actions/pizzas';
+
+const categoryNames = ['Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 const sortItems = [
-  { name: 'популярности', type: 'popular' },
-  { name: 'цене', type: 'price' },
-  { name: 'алфавиту', type: 'alphabet' },
+  { name: 'популярности', type: 'popular', order: 'desc' },
+  { name: 'цене', type: 'price', order: 'desc' },
+  { name: 'алфавит', type: 'name', order: 'asc' },
 ];
+console.log(sortItems);
 
 function Home() {
   const dispatch = useDispatch();
   const items = useSelector(({ pizzas }) => pizzas.items);
   const isLoaded = useSelector(({ pizzas }) => pizzas.isLoaded);
-  const { sortBy, categories } = useSelector(({ filters }) => filters);
+  const { category, sortBy } = useSelector(({ filters }) => filters);
 
   React.useEffect(() => {
-    // Перенисти в Redux и подключить redux thunk
-    // Следить за фильтрацией и сортировкой и подставить параметры в URL из Redux
-    dispatch(fetchPizzas());
-  }, [categories]);
+    dispatch(fetchPizzas(sortBy, category));
+  }, [category, sortBy]);
 
   const onSelectCategory = React.useCallback((index) => {
     dispatch(setCategory(index));
+  }, []);
+
+  const onSelectSortType = React.useCallback((type) => {
+    dispatch(setSortBy(type));
+    console.log(sortBy);
   }, []);
 
   return (
     <div className="container">
       <div className="content__top">
         <Categories
-          activeCategory={categories}
-          onClickItem={onSelectCategory}
+          activeCategory={category}
+          onClickCategory={onSelectCategory}
           items={categoryNames}
         />
-        <SortPopup items={sortItems} />
+        <SortPopup activeSortType={sortBy} items={sortItems} onClickSortType={onSelectSortType} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
@@ -49,4 +54,5 @@ function Home() {
     </div>
   );
 }
+
 export default Home;
