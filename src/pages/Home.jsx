@@ -12,7 +12,7 @@ const sortItems = [
   { name: 'цене', type: 'price', order: 'desc' },
   { name: 'алфавит', type: 'name', order: 'asc' },
 ];
-console.log(sortItems);
+
 
 function Home() {
   const dispatch = useDispatch();
